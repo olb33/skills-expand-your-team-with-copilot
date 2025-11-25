@@ -2,14 +2,22 @@
 MongoDB database configuration and setup for Mergington High School API
 """
 
-from pymongo import MongoClient
+import os
 from argon2 import PasswordHasher
+from datetime import datetime, timedelta
 
-# Connect to MongoDB
-client = MongoClient('mongodb://localhost:27017/')
+# Use mongomock for testing or real MongoDB in production
+if os.environ.get('TESTING', 'false').lower() == 'true':
+    import mongomock
+    client = mongomock.MongoClient()
+else:
+    from pymongo import MongoClient
+    client = MongoClient('mongodb://localhost:27017/')
+
 db = client['mergington_high']
 activities_collection = db['activities']
 teachers_collection = db['teachers']
+announcements_collection = db['announcements']
 
 # Methods
 def hash_password(password):
@@ -29,6 +37,11 @@ def init_database():
     if teachers_collection.count_documents({}) == 0:
         for teacher in initial_teachers:
             teachers_collection.insert_one({"_id": teacher["username"], **teacher})
+    
+    # Initialize announcements if empty
+    if announcements_collection.count_documents({}) == 0:
+        for announcement in initial_announcements:
+            announcements_collection.insert_one(announcement)
 
 # Initial database if empty
 initial_activities = {
@@ -195,6 +208,18 @@ initial_teachers = [
         "display_name": "Principal Martinez",
         "password": hash_password("admin789"),
         "role": "admin"
+    }
+]
+
+# Initial announcements data - example message as required
+initial_announcements = [
+    {
+        "title": "Welcome Back to School!",
+        "message": "We're excited to welcome all students back for the new semester. Don't forget to sign up for your favorite extracurricular activities!",
+        "start_date": None,  # No start date means immediately visible
+        "expiration_date": (datetime.now() + timedelta(days=30)).isoformat(),
+        "created_by": "principal",
+        "created_at": datetime.now().isoformat()
     }
 ]
 
