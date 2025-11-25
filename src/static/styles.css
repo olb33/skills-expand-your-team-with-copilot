@@ -725,3 +725,360 @@ footer {
   margin-bottom: 5px;
   text-align: center;
 }
+
+/* Announcements Banner Styles */
+.announcements-banner {
+  background: linear-gradient(135deg, var(--secondary), var(--secondary-dark));
+  color: white;
+  padding: 12px 15px;
+  margin-bottom: 15px;
+  border-radius: 8px;
+  box-shadow: 0 3px 10px rgba(255, 111, 0, 0.3);
+}
+
+.announcements-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.announcement-item {
+  padding: 10px 15px;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 6px;
+  margin-bottom: 10px;
+}
+
+.announcement-item:last-child {
+  margin-bottom: 0;
+}
+
+.announcement-item h4 {
+  margin: 0 0 5px 0;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.announcement-item h4::before {
+  content: "📢";
+}
+
+.announcement-item p {
+  margin: 0;
+  font-size: 0.9rem;
+  opacity: 0.95;
+  line-height: 1.5;
+}
+
+/* Announcements Management Modal Styles */
+.announcements-modal-content {
+  max-width: 600px;
+  width: 95%;
+  max-height: 85vh;
+  overflow-y: auto;
+}
+
+.announcements-modal-content h3 {
+  color: var(--primary);
+  font-size: 1.3rem;
+  margin-bottom: 15px;
+  text-align: center;
+  border-bottom: 2px solid var(--secondary);
+  padding-bottom: 10px;
+}
+
+.announcements-toolbar {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 15px;
+}
+
+.add-btn {
+  background: linear-gradient(145deg, var(--success), #1b5e20);
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.add-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(46, 125, 50, 0.3);
+}
+
+.add-btn span {
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+#announcements-list-container {
+  max-height: 300px;
+  overflow-y: auto;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px;
+  background: var(--background);
+}
+
+#announcements-list-admin {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.admin-announcement-item {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px;
+  transition: box-shadow 0.2s;
+}
+
+.admin-announcement-item:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.admin-announcement-item.expired {
+  opacity: 0.6;
+  border-color: var(--error);
+  background: var(--error-light);
+}
+
+.admin-announcement-item.scheduled {
+  border-color: var(--warning);
+  background: var(--warning-light);
+}
+
+.admin-announcement-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 8px;
+}
+
+.admin-announcement-header h5 {
+  margin: 0;
+  color: var(--primary);
+  font-size: 1rem;
+  flex: 1;
+}
+
+.announcement-status {
+  font-size: 0.7rem;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.announcement-status.active {
+  background: var(--success-light);
+  color: var(--success);
+}
+
+.announcement-status.expired {
+  background: var(--error-light);
+  color: var(--error);
+}
+
+.announcement-status.scheduled {
+  background: var(--warning-light);
+  color: #b86e00;
+}
+
+.admin-announcement-message {
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  margin-bottom: 10px;
+  line-height: 1.4;
+}
+
+.admin-announcement-dates {
+  display: flex;
+  gap: 15px;
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+}
+
+.admin-announcement-dates span {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.admin-announcement-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.edit-btn, .delete-btn {
+  padding: 5px 12px;
+  border-radius: 15px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: none;
+}
+
+.edit-btn {
+  background: var(--primary-light);
+  color: white;
+}
+
+.edit-btn:hover {
+  background: var(--primary);
+}
+
+.delete-btn {
+  background: var(--error);
+  color: white;
+}
+
+.delete-btn:hover {
+  background: var(--error);
+  opacity: 0.9;
+}
+
+/* Announcement Form Styles */
+#announcement-form-container {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 2px solid var(--border);
+}
+
+#announcement-form-container h4 {
+  color: var(--primary);
+  margin-bottom: 15px;
+  font-size: 1.1rem;
+}
+
+#announcement-form .form-group {
+  margin-bottom: 15px;
+}
+
+#announcement-form label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: 600;
+  color: var(--text-primary);
+  font-size: 0.9rem;
+}
+
+#announcement-form input,
+#announcement-form textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-size: 0.9rem;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+#announcement-form input:focus,
+#announcement-form textarea:focus {
+  outline: none;
+  border-color: var(--primary-light);
+  box-shadow: 0 0 0 3px rgba(83, 75, 174, 0.1);
+}
+
+#announcement-form textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+}
+
+@media (max-width: 500px) {
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+.form-hint {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  margin-top: 4px;
+}
+
+.form-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+
+.cancel-btn {
+  background: var(--border);
+  color: var(--text-primary);
+  padding: 8px 20px;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: none;
+}
+
+.cancel-btn:hover {
+  background: var(--border-focus);
+}
+
+.save-btn {
+  background: linear-gradient(145deg, var(--secondary), var(--secondary-dark));
+  color: white;
+  padding: 8px 24px;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: none;
+}
+
+.save-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 111, 0, 0.3);
+}
+
+.loading-text {
+  text-align: center;
+  color: var(--text-secondary);
+  padding: 20px;
+}
+
+.no-announcements {
+  text-align: center;
+  color: var(--text-secondary);
+  padding: 30px;
+  font-style: italic;
+}
+
+/* Close button for announcements modal */
+.close-announcements-modal {
+  position: absolute;
+  right: 15px;
+  top: 10px;
+  font-size: 24px;
+  cursor: pointer;
+  color: var(--text-secondary);
+  line-height: 1;
+  transition: color 0.2s;
+}
+
+.close-announcements-modal:hover {
+  color: var(--error);
+}
