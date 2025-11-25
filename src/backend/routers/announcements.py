@@ -28,6 +28,17 @@ def serialize_announcement(announcement: dict) -> dict:
     }
 
 
+def validate_date_format(date_string: str, field_name: str) -> datetime:
+    """Validate and parse an ISO format date string"""
+    try:
+        return datetime.fromisoformat(date_string)
+    except ValueError:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Invalid {field_name} format"
+        )
+
+
 @router.get("", response_model=List[Dict[str, Any]])
 @router.get("/", response_model=List[Dict[str, Any]])
 def get_announcements(active_only: bool = True) -> List[Dict[str, Any]]:
@@ -88,34 +99,25 @@ def create_announcement(
     """
     Create a new announcement. Requires teacher authentication.
     """
+    # Capture current time once for consistent validation
+    now = datetime.now()
+    
     # Check teacher authentication
     teacher = teachers_collection.find_one({"_id": teacher_username})
     if not teacher:
         raise HTTPException(status_code=401, detail="Authentication required")
     
     # Validate expiration date
-    try:
-        exp_date = datetime.fromisoformat(expiration_date)
-        if exp_date < datetime.now():
-            raise HTTPException(
-                status_code=400, 
-                detail="Expiration date must be in the future"
-            )
-    except ValueError:
+    exp_date = validate_date_format(expiration_date, "expiration date")
+    if exp_date < now:
         raise HTTPException(
             status_code=400, 
-            detail="Invalid expiration date format"
+            detail="Expiration date must be in the future"
         )
     
     # Validate start date if provided
     if start_date:
-        try:
-            datetime.fromisoformat(start_date)
-        except ValueError:
-            raise HTTPException(
-                status_code=400, 
-                detail="Invalid start date format"
-            )
+        validate_date_format(start_date, "start date")
     
     # Create announcement
     announcement = {
@@ -161,23 +163,11 @@ def update_announcement(
         raise HTTPException(status_code=404, detail="Announcement not found")
     
     # Validate expiration date
-    try:
-        datetime.fromisoformat(expiration_date)
-    except ValueError:
-        raise HTTPException(
-            status_code=400, 
-            detail="Invalid expiration date format"
-        )
+    validate_date_format(expiration_date, "expiration date")
     
     # Validate start date if provided
     if start_date:
-        try:
-            datetime.fromisoformat(start_date)
-        except ValueError:
-            raise HTTPException(
-                status_code=400, 
-                detail="Invalid start date format"
-            )
+        validate_date_format(start_date, "start date")
     
     # Update announcement
     update_data = {
@@ -192,7 +182,7 @@ def update_announcement(
         {"$set": update_data}
     )
     
-    if result.modified_count == 0 and result.matched_count == 0:
+    if result.matched_count == 0:
         raise HTTPException(status_code=500, detail="Failed to update announcement")
     
     # Return updated announcement

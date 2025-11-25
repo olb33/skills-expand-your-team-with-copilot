@@ -1046,7 +1046,7 @@ document.addEventListener("DOMContentLoaded", () => {
               </div>
               <div class="admin-announcement-actions">
                 <button class="edit-btn" data-id="${announcement.id}">✏️ Edit</button>
-                <button class="delete-btn" data-id="${announcement.id}" data-title="${escapeHtml(announcement.title)}">🗑️ Delete</button>
+                <button class="delete-btn" data-id="${announcement.id}" data-title="${announcement.title}">🗑️ Delete</button>
               </div>
             </div>
           `;
@@ -1211,9 +1211,23 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    // Convert dates to ISO format
-    const expirationDate = new Date(expirationDateInput).toISOString();
-    const startDate = startDateInput ? new Date(startDateInput).toISOString() : "";
+    // Validate and convert dates to ISO format
+    const expirationDateObj = new Date(expirationDateInput);
+    if (isNaN(expirationDateObj.getTime())) {
+      showMessage("Invalid expiration date.", "error");
+      return;
+    }
+    const expirationDate = expirationDateObj.toISOString();
+
+    let startDate = "";
+    if (startDateInput) {
+      const startDateObj = new Date(startDateInput);
+      if (isNaN(startDateObj.getTime())) {
+        showMessage("Invalid start date.", "error");
+        return;
+      }
+      startDate = startDateObj.toISOString();
+    }
 
     try {
       let url = "/announcements";
