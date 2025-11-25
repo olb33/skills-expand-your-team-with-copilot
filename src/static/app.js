@@ -519,20 +519,20 @@ document.addEventListener("DOMContentLoaded", () => {
       </div>
     `;
 
-    // Create share buttons HTML
+    // Create share buttons HTML with accessibility attributes
     const shareButtonsHtml = `
-      <div class="share-buttons">
+      <div class="share-buttons" role="group" aria-label="Share this activity">
         <span class="share-label">Share:</span>
-        <button class="share-button facebook" data-activity="${name}" title="Share on Facebook">
+        <button class="share-button facebook" data-activity="${name}" title="Share on Facebook" aria-label="Share on Facebook">
           f
         </button>
-        <button class="share-button twitter" data-activity="${name}" title="Share on X (Twitter)">
+        <button class="share-button twitter" data-activity="${name}" title="Share on X (Twitter)" aria-label="Share on X (Twitter)">
           𝕏
         </button>
-        <button class="share-button email" data-activity="${name}" title="Share via Email">
+        <button class="share-button email" data-activity="${name}" title="Share via Email" aria-label="Share via Email">
           ✉
         </button>
-        <button class="share-button copy-link" data-activity="${name}" title="Copy Link">
+        <button class="share-button copy-link" data-activity="${name}" title="Copy Link" aria-label="Copy Link">
           🔗
         </button>
       </div>
@@ -863,18 +863,48 @@ document.addEventListener("DOMContentLoaded", () => {
       const body = encodeURIComponent(`${shareText}\n\nLearn more at: ${shareUrl}`);
       window.location.href = `mailto:?subject=${subject}&body=${body}`;
     } else if (button.classList.contains("copy-link")) {
-      // Copy link to clipboard
+      // Copy link to clipboard with fallback for non-HTTPS contexts
       const textToCopy = `${shareTitle}\n${shareText}\n${shareUrl}`;
-      navigator.clipboard.writeText(textToCopy).then(() => {
-        button.classList.add("copied");
-        button.textContent = "✓";
-        showMessage("Link copied to clipboard!", "success");
-        setTimeout(() => {
-          button.classList.remove("copied");
-          button.textContent = "🔗";
-        }, 2000);
-      }).catch(() => {
-        showMessage("Failed to copy link", "error");
+      
+      const copyToClipboard = async (text) => {
+        // Try modern Clipboard API first
+        if (navigator.clipboard && window.isSecureContext) {
+          await navigator.clipboard.writeText(text);
+          return true;
+        }
+        
+        // Fallback for non-secure contexts or older browsers
+        const textArea = document.createElement("textarea");
+        textArea.value = text;
+        textArea.style.position = "fixed";
+        textArea.style.left = "-9999px";
+        textArea.style.top = "-9999px";
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+        
+        try {
+          document.execCommand("copy");
+          document.body.removeChild(textArea);
+          return true;
+        } catch (err) {
+          document.body.removeChild(textArea);
+          return false;
+        }
+      };
+      
+      copyToClipboard(textToCopy).then((success) => {
+        if (success) {
+          button.classList.add("copied");
+          button.textContent = "✓";
+          showMessage("Link copied to clipboard!", "success");
+          setTimeout(() => {
+            button.classList.remove("copied");
+            button.textContent = "🔗";
+          }, 2000);
+        } else {
+          showMessage("Failed to copy link", "error");
+        }
       });
     }
   }
